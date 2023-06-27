@@ -119,8 +119,6 @@ export default function PokeList() {
   const dispatch = useDispatch();
   const { pokemons } = useSelector((state) => state.pokemons);
 
-  console.log(pokemons);
-
   const handleChangePage = () => {
     dispatch(changePage());
   };
@@ -240,7 +238,7 @@ export default function PokeList() {
                     >
                       <CardMedia
                         component="img"
-                        image={`${pokemon.url}`}
+                        image={`./images/${pokemon.url}`}
                         alt="Missing image"
                         sx={{
                           margin: "auto",
@@ -260,9 +258,9 @@ export default function PokeList() {
                     </CardContent>
                     <CardActions disableSpacing sx={{ padding: "1rem" }}>
                       <Stack direction="row" spacing={1}>
-                        {pokemon.types.map((type) => (
-                          <PokeType type={type} key={type} />
-                        ))}
+                        {pokemon.types.map((type) =>
+                          type ? <PokeType type={type} key={type} /> : ""
+                        )}
                       </Stack>
                     </CardActions>
                   </Card>

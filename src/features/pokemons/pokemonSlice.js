@@ -9,9 +9,8 @@ export const getPokemons = createAsyncThunk(
       let url = `/pokemons?page=${page}&limit=${POKEMONS_PER_PAGE}`;
       if (search) url += `&search=${search}`;
       if (type) url += `&type=${type}`;
-      const response = await apiService.get(url);
 
-      console.log("response " + response);
+      const response = await apiService.get(url);
 
       const timeout = () => {
         return new Promise((resolve) => {
@@ -22,9 +21,7 @@ export const getPokemons = createAsyncThunk(
       };
       await timeout();
 
-      console.log("response " + response);
-
-      return response.data;
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -37,8 +34,8 @@ export const getPokemonById = createAsyncThunk(
     try {
       let url = `/pokemons/${id}`;
       const response = await apiService.get(url);
-      if (!response.data) return rejectWithValue({ message: "No data" });
-      return response.data;
+      if (!response) return rejectWithValue({ message: "No data" });
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -138,7 +135,7 @@ export const pokemonSlice = createSlice({
     [getPokemons.fulfilled]: (state, action) => {
       state.loading = false;
       const { search, type } = state;
-      console.log("getPokemons.fulfilled ", action.payload);
+
       if ((search || type) && state.page === 1) {
         state.pokemons = action.payload;
       } else {
@@ -147,7 +144,10 @@ export const pokemonSlice = createSlice({
     },
     [getPokemonById.fulfilled]: (state, action) => {
       state.loading = false;
-      state.pokemon = action.payload;
+      state.pokemon.previousPokemon = action.payload[0];
+      state.pokemon.pokemon = action.payload[1];
+      state.pokemon.nextPokemon = action.payload[2];
+      // console.log("getPokemonById.fulfilled ", action.payload);
     },
     [addPokemon.fulfilled]: (state) => {
       state.loading = false;
