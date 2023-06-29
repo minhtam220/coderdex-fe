@@ -149,8 +149,8 @@ export default function PokeList() {
             >
               <PokeType
                 onClick={() => {
-                  dispatch(changePage(1));
                   dispatch(typeQuery(item));
+                  dispatch(changePage(1));
                 }}
                 type={item}
                 size="large"
